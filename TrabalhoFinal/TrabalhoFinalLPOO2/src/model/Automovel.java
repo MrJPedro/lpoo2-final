@@ -27,7 +27,7 @@ public class Automovel extends Veiculo{
 	@Override
 	public double getValorDiariaLocacao() {
 		double valor = 0;
-		switch(getCategoria().getNomeCategoria()) {
+		switch(this.getCategoria().toString()) {
 			case "POPULAR":
 				valor = 100;
 				break;

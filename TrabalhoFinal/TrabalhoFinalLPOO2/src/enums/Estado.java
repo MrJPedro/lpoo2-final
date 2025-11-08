@@ -7,7 +7,8 @@ public enum Estado {
 	DISPONIVEL(2),
 	VENDIDO(3);
 	
-	private final int ID_ESTADO;
+	// Mudei para public para que consiga acessar no DAO
+        public final int ID_ESTADO;
 	
 	Estado(int idEstado){
 		this.ID_ESTADO = idEstado;

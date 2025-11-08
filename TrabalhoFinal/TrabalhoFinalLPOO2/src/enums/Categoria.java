@@ -6,7 +6,7 @@ public enum Categoria {
 	INTERMEDIARIO(1),
 	LUXO(2);
 	
-	private final int ID_CATEGORIA;
+	public final int ID_CATEGORIA;
 	
 	Categoria(int idCategoria){
 		this.ID_CATEGORIA = idCategoria;

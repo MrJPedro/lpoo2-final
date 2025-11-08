@@ -295,7 +295,7 @@ create table automovel (
     id_modelo_fk int,
     constraint pkAutomovel primary key (placa_fk),
     constraint fkVeiculoAutomovel foreign key (placa_fk)
-		references veiculo (placa),
+		references veiculo (placa) ON DELETE CASCADE,
 	constraint fkModeloautomovelAutomovel foreign key (id_modelo_fk)
 		references modelo_automovel (id_modelo)
 );
@@ -327,7 +327,7 @@ create table motocicleta (
     id_modelo_fk int,
     constraint pkMotocicleta primary key (placa_fk),
     constraint fkVeiculoMotocicleta foreign key (placa_fk)
-		references veiculo (placa),
+		references veiculo (placa) ON DELETE CASCADE,
 	constraint fkModelomotocicletaMotocicleta foreign key (id_modelo_fk)
 		references modelo_motocicleta (id_modelo)
 );
@@ -360,7 +360,7 @@ create table van (
     id_modelo_fk int,
     constraint pkVan primary key (placa_fk),
     constraint fkVeiculoVan foreign key (placa_fk)
-		references veiculo (placa),
+		references veiculo (placa) ON DELETE CASCADE,
 	constraint fkModelovanVan foreign key (id_modelo_fk)
 		references modelo_van (id_modelo)
 );

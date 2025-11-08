@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import model.Cliente;
@@ -39,6 +40,7 @@ public class AutomovelDAOsql implements AutomovelDAO{
                 "modelo_automovel.id_modelo, " +
                 "modelo_automovel.nome_modelo AS modelo, " +
             
+                "locacao.id_locacao, " +
                 "locacao.dias_locacao, " +
                 "locacao.valor_locacao, " +
                 "locacao.data_locacao, " +
@@ -84,6 +86,7 @@ public class AutomovelDAOsql implements AutomovelDAO{
                 "modelo_automovel.id_modelo, " +
                 "modelo_automovel.nome_modelo AS modelo, " +
             
+                "locacao.id_locacao, " +
                 "locacao.dias_locacao, " +
                 "locacao.valor_locacao, " +
                 "locacao.data_locacao, " +
@@ -115,18 +118,59 @@ public class AutomovelDAOsql implements AutomovelDAO{
                     "ON locacao.cpf_cliente_fk = cliente.cpf " +
             "WHERE veiculo.placa = ?";
     
-    private String insert = 
-            "INSERT INTO ";
-    private String update;
-    private String delete;
-    private String deleteAll;
+    private String insertVeiculo = 
+            "INSERT INTO " +
+            "veiculo (id_marca_fk, id_estado_fk, id_categoria_fk, id_locacao_fk, valor_compra, placa, ano) " +
+            "VALUES " +
+            "(?, ?, ?, ?, ?, ?, ?)";
     
+    private String insertAutomovel = 
+            "INSERT INTO " +
+            "automovel (placa_fk, id_modelo_fk) "+
+            "VALUES " +
+            "(?, ?)";
+    
+    private String updateVeiculo =
+            "UPDATE veiculo " +
+            "SET " +
+                "id_marca = ?, " +
+                "id_estado = ?, " +
+                "id_categoria = ?, " +
+                "id_locacao = ?, " +
+                "valor_compra = ?, " +
+                "ano = ? " +
+            "WHERE " +
+                "placa = ?";
+    
+    private String updateAutomovel = 
+            "UPDATE automovel " +
+            "SET id_modelo_fk = ? " +
+            "WHERE placa_fk = ?";
+    
+    // O setup do BD inclui "ON DELETE CASCADE", o que garante
+    // que quando um registro é deletado na tabela veiculo, todos
+    // os registros na tabela automovel que referenciam a placa desse
+    // mesmo veículo também são deletadas
+    private String delete = 
+            "DELETE FROM veiculo " +
+            "WHERE placa = ?";
+    
+    // Deleta todos os registros na tabela veiculo cuja placa se encontra na tabela automovel,
+    // o que, como descrito no comentário acima, garante que todos os registros na tabela automovel
+    // também sejam excluídos
+    private String deleteAll = 
+            "DELETE veiculo " +
+            "FROM veiculo " +
+                "JOIN automovel " +
+                    "ON veiculo.placa = automovel.placa_fk ";
+            
+    
+    /*
     private String selectPlaca =
             "SELECT placa " +
             "FROM veiculo " +
             "WHERE placa = ?";
     
-    /*
     private String selectMarca =
             "SELECT id_marca " +
             "FROM marca_veiculo " +
@@ -136,7 +180,7 @@ public class AutomovelDAOsql implements AutomovelDAO{
             "SELECT id_modelo " +
             "FROM modelo_automovel " +
             "WHERE nome_modelo = ?";
-    */
+    
     
     private String selectLocacao =
             "SELECT id_locacao " +
@@ -147,8 +191,9 @@ public class AutomovelDAOsql implements AutomovelDAO{
     private String insertLocacao = 
             "INSERT INTO " +
             "locacao(id_locacao, dias_locacao, valor_locacao, data_locacao, cpf_cliente_fk) " +
-            "";
-    
+            "VALUES " +
+            "(?, ?, ?, ?, ?)";
+    */
     
     
     private AutomovelDAOsql(){}
@@ -202,11 +247,20 @@ public class AutomovelDAOsql implements AutomovelDAO{
                         cpfCliente,
                         enderecoCliente
                     );
-                
+                int idLocacao = rs.getInt("id_locacao");
                 int diasLocacao = rs.getInt("dias_locacao");
                 double valorLocacao = rs.getDouble("valor_locacao");
-                LocalDate dataLocacao = rs.getDate("data_locacao").toLocalDate();
-                Locacao locacao = new Locacao(diasLocacao, valorLocacao, dataLocacao, cliente);
+                //LocalDate dataLocacao = rs.getDate("data_locacao").toLocalDate();
+                
+                
+                Date dataLocacaoDate = rs.getDate("data_locacao");
+                LocalDate dataLocacao = null;
+                if (dataLocacaoDate != null){
+                    dataLocacao = LocalDate.ofInstant(
+                            dataLocacaoDate.toInstant(),
+                            ZoneId.systemDefault());
+                }
+                Locacao locacao = new Locacao(idLocacao, diasLocacao, valorLocacao, dataLocacao, cliente);
                 
                 double valorCompraVeiculo = rs.getDouble("valor_compra");
                 String placaVeiculo = rs.getString("placa");
@@ -233,11 +287,12 @@ public class AutomovelDAOsql implements AutomovelDAO{
     public Automovel getByPlaca(String placa) throws SQLException, IOException {
         try (
                 Connection con = ConnectionFactory.getConnection();
-                PreparedStatement st = con.prepareStatement(this.selectAll);
+                PreparedStatement st = con.prepareStatement(this.selectByPlaca);
             )
         {
             st.setString(1, placa);
             ResultSet rs = st.executeQuery();
+            
             Automovel automovel = null;
             
             if(rs.next()){
@@ -270,10 +325,20 @@ public class AutomovelDAOsql implements AutomovelDAO{
                         enderecoCliente
                     );
                 
+                int idLocacao = rs.getInt("id_locacao");
                 int diasLocacao = rs.getInt("dias_locacao");
                 double valorLocacao = rs.getDouble("valor_locacao");
-                LocalDate dataLocacao = rs.getDate("data_locacao").toLocalDate();
-                Locacao locacao = new Locacao(diasLocacao, valorLocacao, dataLocacao, cliente);
+                //LocalDate dataLocacao = rs.getDate("data_locacao").toLocalDate();
+                
+                Date dataLocacaoDate = rs.getDate("data_locacao");
+                LocalDate dataLocacao = null;
+                if (dataLocacaoDate != null){
+                    dataLocacao = LocalDate.ofInstant(
+                            dataLocacaoDate.toInstant(),
+                            ZoneId.systemDefault());
+                }
+                
+                Locacao locacao = new Locacao(idLocacao, diasLocacao, valorLocacao, dataLocacao, cliente);
                 
                 double valorCompraVeiculo = rs.getDouble("valor_compra");
                 String placaVeiculo = rs.getString("placa");
@@ -301,23 +366,92 @@ public class AutomovelDAOsql implements AutomovelDAO{
     }
     
     @Override
-    public void add(Automovel automovel) throws SQLException, IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void add(Automovel automovel) throws SQLException, IOException, Exception {
+        try (
+                Connection con = ConnectionFactory.getConnection();
+                PreparedStatement stVeiculo = con.prepareStatement(this.insertVeiculo);
+                PreparedStatement stAutomovel = con.prepareStatement(this.insertAutomovel);
+                )
+        {
+            Automovel existente = this.getByPlaca(automovel.getPlaca());
+            
+            if(existente!=null){
+                throw new Exception("Veículo [Placa: " + automovel.getPlaca() + "] já cadastrado no BD!!");
+            }
+            
+            stVeiculo.setInt(1, automovel.getMarca().ID_MARCA);
+            stVeiculo.setInt(2, automovel.getEstado().ID_ESTADO);
+            stVeiculo.setInt(3, automovel.getCategoria().ID_CATEGORIA);
+            stVeiculo.setInt(4, automovel.getLocacao().getIdLocacao());
+            stVeiculo.setDouble(5, automovel.getValorDeCompra());
+            stVeiculo.setString(6, automovel.getPlaca());
+            stVeiculo.setInt(7, automovel.getAno());
+            
+            stAutomovel.setString(1, automovel.getPlaca());
+            stAutomovel.setInt(2, automovel.getModelo().ID_MODELO_AUTOMOVEL);
+            
+            stVeiculo.executeUpdate();
+            stAutomovel.executeUpdate();
+        }
+    }
+    
+    @Override
+    public void update(Automovel automovel) throws SQLException, IOException, Exception {
+        try (
+                Connection con = ConnectionFactory.getConnection();
+                PreparedStatement stVeiculo = con.prepareStatement(this.updateVeiculo);
+                PreparedStatement stAutomovel = con.prepareStatement(this.updateAutomovel);
+                )
+        {
+            Automovel existente = this.getByPlaca(automovel.getPlaca());
+            
+            if(existente==null){
+                throw new Exception("Veículo [Placa: " + automovel.getPlaca() + " ] não existe no BD!!");
+            }
+            
+            stVeiculo.setInt(1, automovel.getMarca().ID_MARCA);
+            stVeiculo.setInt(2, automovel.getEstado().ID_ESTADO);
+            stVeiculo.setInt(3, automovel.getCategoria().ID_CATEGORIA);
+            stVeiculo.setInt(4, automovel.getLocacao().getIdLocacao());
+            stVeiculo.setDouble(5, automovel.getValorDeCompra());
+            stVeiculo.setInt(6, automovel.getAno());
+            stVeiculo.setString(7,automovel.getPlaca());
+            
+            stAutomovel.setInt(1, automovel.getModelo().ID_MODELO_AUTOMOVEL);
+            stAutomovel.setString(2, automovel.getPlaca());
+            
+            stVeiculo.executeUpdate();
+            stAutomovel.executeUpdate();
+        }
     }
 
     @Override
-    public void update(Automovel automovel) throws SQLException, IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void delete(Automovel automovel) throws SQLException, IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void delete(Automovel automovel) throws SQLException, IOException, Exception {
+         try (
+                Connection con = ConnectionFactory.getConnection();
+                PreparedStatement st = con.prepareStatement(this.delete);
+                )
+        {
+            Automovel existente = this.getByPlaca(automovel.getPlaca());
+            
+            if(existente==null){
+                throw new Exception("Veículo [Placa: " + automovel.getPlaca() + " ] não existe no BD!!");
+            }
+            
+            st.setString(1, automovel.getPlaca());            
+            st.executeUpdate();
+        }
     }
 
     @Override
     public void deleteAll() throws SQLException, IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try (
+                Connection con = ConnectionFactory.getConnection();
+                PreparedStatement st = con.prepareStatement(this.deleteAll);
+                )
+        {            
+            st.executeUpdate();
+        }
     }
     
 }

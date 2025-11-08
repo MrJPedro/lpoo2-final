@@ -1,9 +1,15 @@
 package misc;
 
 import swing.Janela;
-
+// ===== Remover essas importações, pois foram utilizadas para testes =====
 import enums.*;
 import java.util.Arrays;
+import java.util.List;
+import model.Automovel;
+import model.dao.DaoFactory;
+import model.dao.interfaces.AutomovelDAO;
+
+// ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
 
 public class Main {
 
@@ -11,8 +17,14 @@ public class Main {
 		// TODO Auto-generated method stub
 		//new Janela();
                 
-                Estado[] estado = Estado.values();
-                System.out.println(Arrays.asList(estado).contains(Estado.NOVO));
+                try {
+                    AutomovelDAO aDao = DaoFactory.getAutomovelDAO();
+                    Automovel a = aDao.getByPlaca("GGG1033");
+                    System.out.println(a.getPlaca());
+                } catch (Exception e){
+                    System.out.println(e);
+                }
+                
 	}
 
 }

@@ -3,20 +3,26 @@ import model.Cliente;
 import java.time.LocalDate;
 
 public class Locacao {
-
-	private int dias;
+        
+        private int idLocacao;
+        private int dias;
 	private double valor;
 	private LocalDate data;
 	private Cliente cliente;
 	
-	public Locacao(int dias, double valor, LocalDate data, Cliente cliente){
-		this.dias = dias;
+	public Locacao(int idLocacao, int dias, double valor, LocalDate data, Cliente cliente){
+                this.idLocacao = idLocacao;
+                this.dias = dias;
 		this.valor = valor;
 		this.data = data;
 		this.cliente = cliente;
 	}
 	
-	public double getValor() {
+        public int getIdLocacao(){
+            return this.idLocacao;
+        }
+        
+        public double getValor() {
 		return valor;
 	}
 
