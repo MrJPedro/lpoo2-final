@@ -1,10 +1,9 @@
 package enums;
 
-
 public enum Categoria {
-	POPULAR(0),
-	INTERMEDIARIO(1),
-	LUXO(2);
+	POPULAR(1),
+	INTERMEDIARIO(2),
+	LUXO(3);
 	
 	public final int ID_CATEGORIA;
 	

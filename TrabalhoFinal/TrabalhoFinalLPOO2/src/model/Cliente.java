@@ -8,8 +8,6 @@ public class Cliente {
 	private long cpf;
 	private String endereco;
 	
-	public static int index;
-	
 	public Cliente(String nome, String sobrenome, int rg, long cpf, String endereco){
 		this.nome = nome;
 		this.sobrenome = sobrenome;

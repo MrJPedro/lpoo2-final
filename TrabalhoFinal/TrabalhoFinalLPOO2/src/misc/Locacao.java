@@ -4,13 +4,13 @@ import java.time.LocalDate;
 
 public class Locacao {
         
-        private int idLocacao;
+        private long idLocacao;
         private int dias;
 	private double valor;
 	private LocalDate data;
 	private Cliente cliente;
 	
-	public Locacao(int idLocacao, int dias, double valor, LocalDate data, Cliente cliente){
+	public Locacao(long idLocacao, int dias, double valor, LocalDate data, Cliente cliente){
                 this.idLocacao = idLocacao;
                 this.dias = dias;
 		this.valor = valor;
@@ -18,7 +18,7 @@ public class Locacao {
 		this.cliente = cliente;
 	}
 	
-        public int getIdLocacao(){
+        public long getIdLocacao(){
             return this.idLocacao;
         }
         
@@ -37,4 +37,8 @@ public class Locacao {
 	public Cliente getCliente() {
 		return cliente;
 	}
+        
+        public void setIdLocacao(long idLocacao) {
+        this.idLocacao = idLocacao;
+    }
 }

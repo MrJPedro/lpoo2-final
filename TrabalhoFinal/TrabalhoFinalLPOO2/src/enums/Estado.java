@@ -1,14 +1,12 @@
 package enums;
 
-
 public enum Estado {
-	NOVO(0),
-	LOCADO(1),
-	DISPONIVEL(2),
-	VENDIDO(3);
+	NOVO(1),
+	LOCADO(2),
+	DISPONIVEL(3),
+	VENDIDO(4);
 	
-	// Mudei para public para que consiga acessar no DAO
-        public final int ID_ESTADO;
+    public final int ID_ESTADO;
 	
 	Estado(int idEstado){
 		this.ID_ESTADO = idEstado;

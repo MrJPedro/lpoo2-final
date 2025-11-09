@@ -1,15 +1,14 @@
 package enums;
 
-
 public enum Marca {
-	WOLKSWAGEN(0),
-	FIAT(1),
-	RENAULT(2),
-	MERCEDES(3),
-	PORSCHE(4),
-	HONDA(5),
-	YAMAHA(6),
-	HARLEY_DAVIDSON(7);
+	WOLKSWAGEN(1),
+	FIAT(2),
+	RENAULT(3),
+	MERCEDES(4),
+	PORSCHE(5),
+	HONDA(6),
+	YAMAHA(7),
+	HARLEY_DAVIDSON(8);
 	
 	public final int ID_MARCA;
 	

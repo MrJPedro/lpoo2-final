@@ -19,7 +19,7 @@ public class Van extends Veiculo{
 	@Override
 	public double getValorDiariaLocacao() {
 		double valor = 0;
-		switch(getCategoria().getNomeCategoria()) {
+		switch(getCategoria().toString()) {
 			case "POPULAR":
 				valor = 200;
 				break;

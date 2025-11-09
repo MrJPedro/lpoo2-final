@@ -6,7 +6,7 @@ import enums.Estado;
 import enums.Marca;
 import java.time.LocalDate;
 
-public abstract class Veiculo implements Veiculo1{
+public abstract class Veiculo implements VeiculoI{
 	
 	private Marca marca;
 	private Estado estado;
@@ -28,20 +28,20 @@ public abstract class Veiculo implements Veiculo1{
 
 	@Override
 	public void locar(int dias, LocalDate data, Cliente cliente) {
-		locacao = new Locacao(dias, getValorDiariaLocacao()*dias, data, cliente);
-		estado = Estado.LOCADO;
+		this.locacao = new Locacao(0, dias, getValorDiariaLocacao() * dias, data, cliente);
+		this.estado = Estado.LOCADO;
 	}
 
 	@Override
 	public void vender() {
-		estado = Estado.VENDIDO;
-		locacao = null;
+		this.estado = Estado.VENDIDO;
+		this.locacao = null;
 	}
 
 	@Override
 	public void devolver() {
-		estado = Estado.DISPONIVEL;
-		locacao = null;
+		this.estado = Estado.DISPONIVEL;
+		this.locacao = null;
 	}
 
 	@Override
@@ -63,6 +63,10 @@ public abstract class Veiculo implements Veiculo1{
 	public Locacao getLocacao() {
 		return this.locacao;
 	}
+	
+	public void setLocacao(Locacao locacao) {
+		this.locacao = locacao;
+	}
 
 	@Override
 	public String getPlaca() {
@@ -79,11 +83,13 @@ public abstract class Veiculo implements Veiculo1{
 	}
 	
 	@Override
-	public double getValorParaVenda() {	//Idade do veículo hardcoded
-		double valorDeVenda = valorDeCompra - ((2025 - ano) * 0.15 * valorDeCompra);
+	public double getValorParaVenda() {
+        int anoAtual = java.time.LocalDate.now().getYear();
+		double valorDeVenda = valorDeCompra - ((anoAtual - ano) * 0.15 * valorDeCompra);
 		
-		if(valorDeVenda < valorDeCompra*0.1)
+		if(valorDeVenda < (valorDeCompra * 0.1)) {
 			valorDeVenda = valorDeCompra * 0.1;
+        }
 		
 		return valorDeVenda;
 	}
@@ -92,5 +98,4 @@ public abstract class Veiculo implements Veiculo1{
 	public abstract double getValorDiariaLocacao();
 
 	public abstract Object getModelo();
-
 }

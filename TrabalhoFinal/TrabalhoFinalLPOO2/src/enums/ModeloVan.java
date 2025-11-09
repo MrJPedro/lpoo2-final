@@ -1,22 +1,21 @@
 package enums;
 
-
 public enum ModeloVan {
 	
 	//VOLKS
-	KOMBI(0, Marca.WOLKSWAGEN),
-	TRANSPORTER(1, Marca.WOLKSWAGEN),
-	CARAVELLE(2, Marca.WOLKSWAGEN),
+	KOMBI(1, Marca.WOLKSWAGEN),
+	TRANSPORTER(2, Marca.WOLKSWAGEN),
+	CARAVELLE(3, Marca.WOLKSWAGEN),
 	
 	//FIAT
-	FIORINO(3, Marca.FIAT),
-	DOBLO(4, Marca.FIAT),
-	SCUDO(5, Marca.FIAT),
+	FIORINO(4, Marca.FIAT),
+	DOBLO(5, Marca.FIAT),
+	SCUDO(6, Marca.FIAT),
 	
 	//MERCEDES
-	SPRINTER(6, Marca.MERCEDES),
-	VITO(7, Marca.MERCEDES),
-	CLASSE_V(8, Marca.MERCEDES);
+	SPRINTER(7, Marca.MERCEDES),
+	VITO(8, Marca.MERCEDES),
+	CLASSE_V(9, Marca.MERCEDES);
 		
 	public final int ID_MODELO_VAN;
 	public final Marca marca;

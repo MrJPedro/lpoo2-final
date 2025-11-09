@@ -1,21 +1,20 @@
 package enums;
 
-
 public enum ModeloMotocicleta {
 	//HONDA
-	CG_125(0, Marca.HONDA),
-	XRE_300(1, Marca.HONDA),
-	FALCON(2, Marca.HONDA),
+	CG_125(1, Marca.HONDA),
+	XRE_300(2, Marca.HONDA),
+	FALCON(3, Marca.HONDA),
 	
 	//YAMAHA
-	FAZER_250(3, Marca.YAMAHA),
-	MT_03(4, Marca.YAMAHA),
-	LANDER_250(5, Marca.YAMAHA),
+	FAZER_250(4, Marca.YAMAHA),
+	MT_03(5, Marca.YAMAHA),
+	LANDER_250(6, Marca.YAMAHA),
 	
 	//HARLEY DAVIDSON
-	IRON_883(6, Marca.HARLEY_DAVIDSON),
-	FAT_BOY(7, Marca.HARLEY_DAVIDSON),
-	STREET_GLIDE(8, Marca.HARLEY_DAVIDSON);
+	IRON_883(7, Marca.HARLEY_DAVIDSON),
+	FAT_BOY(8, Marca.HARLEY_DAVIDSON),
+	STREE_GLIDE(9, Marca.HARLEY_DAVIDSON);
 	
 	public final int ID_MODELO_MOTOCICLETA;
 	public final Marca marca;
@@ -25,7 +24,6 @@ public enum ModeloMotocicleta {
 		this.marca = marca;
 	}
 }
-
 
 
 /*

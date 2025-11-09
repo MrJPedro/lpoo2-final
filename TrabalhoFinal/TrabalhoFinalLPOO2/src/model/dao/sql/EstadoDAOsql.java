@@ -8,7 +8,6 @@ import model.dao.interfaces.EstadoDAO;
 import model.dao.ConnectionFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 

@@ -19,7 +19,7 @@ public class Motocicleta extends Veiculo{
 	@Override
 	public double getValorDiariaLocacao() {
 		double valor = 0;
-		switch(getCategoria().getNomeCategoria()) {
+		switch(getCategoria().toString()) {
 			case "POPULAR":
 				valor = 70;
 				break;
